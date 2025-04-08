@@ -27,7 +27,7 @@ steps_per_episode = []
 
 # training loop
 for i in range(episodes):
-    state, info = env.reset()
+    state = env.reset()
 
     """ new change"""
     # Ensure state is an integer (avoid potential indexing issues)
