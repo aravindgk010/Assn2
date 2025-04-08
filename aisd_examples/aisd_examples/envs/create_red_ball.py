@@ -1,9 +1,9 @@
 import random
-import gymnasium as gym
-from gymnasium import spaces
+import gymnasium as gym #type: ignore
+from gymnasium import spaces #type: ignore
 import numpy as np
 
-import rclpy
+import rclpy 
 from rclpy.node import Node
 from sensor_msgs.msg import Image
 from geometry_msgs.msg import Twist
