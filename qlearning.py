@@ -27,21 +27,13 @@ steps_per_episode = []
 
 # training loop
 for i in range(episodes):
-    state = env.reset()
-
-    """ new change"""
-    # Ensure state is an integer (avoid potential indexing issues)
-    if isinstance(state, tuple):
-        state = state[0]
-        #state = (state,) # new change
-        #state = state.get("State", 0)   # default to 0 if key doesn't exist
+    state_dict = env.reset()
+    state = state_dict['position']
 
     total_reward = 0
     steps = 0
     done = False
 
-    #Track visited states
-    visited_states = set()
 
     while not done:
         os.system('cls' if os.name == 'nt' else 'clear')    #'cls' if os.name == 'nt' else 'clear' - new change original 'cls' # cross-platform console clear
@@ -51,47 +43,28 @@ for i in range(episodes):
         env.render()
         time.sleep(0.05)
 
+        steps += 1
+
         # select action using epsilon-greedy policy
         if np.random.uniform() < epsilon:
-            #action = np.random.choice([0,1, 2, 3]) # random action
-            """ new change old one above"""
-            #action = np.random.choice(env.action_space.n)  # Use environment action space
             action = env.action_space.sample()
         
         else:
             action = np.argmax(q_table[state]) # choose action with highest Q-value
 
         # take action
-        next_state, reward, terminated, truncated, info = env.step(action)
-
-        # Ensure next_state is integer
-        if isinstance(next_state, dict):
-            next_state = next_state.get("State", 0)
-
-        # Done flag
-        done = terminated or truncated
-
-        # Modified reward function
-        step_penalty = -1  # Penalize each step
-        revisit_penalty = -5 # Penalty for revisiting the same state
-        goal_reward = 100
-
-        if done:
-            reward+= goal_reward  # If goal is reached
-
-        # penalize id revisiting the same state
-        if state in visited_states:
-            reward += revisit_penalty
-        else:
-            visited_states.add(state)
+        next_state_dict, reward, terminated, truncated, info = env.step(action)
+        next_state = next_state_dict['position']
         
         # q-learning update rule
         q_table[state][action] = q_table[state][action] + alpha * (reward + gamma * np.max(q_table[next_state]) - q_table[state][action])
 
         # update state
         state = next_state
+
         total_reward += reward
-        steps += 1 
+        
+        done = terminated or truncated
     
     # decay exploration rate
     epsilon = max(0.01, epsilon*(1-decay))
