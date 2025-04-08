@@ -6,7 +6,7 @@ import aisd_examples
 env = gym.make("aisd_examples/RedBall-V0", render_mode="human")
 
 # Reset the environment
-observation, info = env.reset()
+observation= env.reset()
 
 
 # Run the agent for 100 steps

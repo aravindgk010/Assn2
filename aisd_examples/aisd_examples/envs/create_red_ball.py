@@ -22,6 +22,8 @@ class RedBall(Node):
             self.listener_callback,
             10)
         self.subscription # prevent unused variable warning
+        
+        self.redball_position = None
 
         # A converter between ROS and OpenCV images
         self.br = CvBridge()
@@ -57,6 +59,7 @@ class RedBall(Node):
             self.get_logger().info('no ball detected')
 
 
+
 class RedBallEnv(gym.Env):
     metadata = {"render_modes": "rgb_array", "render_fps":4}
 
@@ -87,7 +90,7 @@ class RedBallEnv(gym.Env):
         return observation
 
     def step(self, action):
-        self.redball.step(action)
+        #self.redball.step(action)
         rclpy.spin_once(self.redball)
         self.step_count += 1
 
