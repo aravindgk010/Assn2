@@ -90,15 +90,23 @@ class RedBallEnv(gym.Env):
         return observation
 
     def step(self, action):
-        #self.redball.step(action)
+        twist = Twist()
+
+        if self.redball.redball_position is None:
+            twist.angular.z = 0.5
+        else:
+            twist.angular.z = (action -320) / 320 *(np.pi /2) #move towards the ball
+
+        self.redball.twist_publisher.publish(twist)
+
         rclpy.spin_once(self.redball)
         self.step_count += 1
 
         observation = self._get_obs()
         info = self._get_info()
 
-        reward = 0
-        terminate = False
+        reward = -abs(observation["position"] - 320) / 320
+        terminate = self.step_count == 100
 
 
         return observation, reward, terminate, False, info
