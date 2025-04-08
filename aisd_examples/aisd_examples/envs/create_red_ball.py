@@ -69,9 +69,7 @@ class RedBallEnv(gym.Env):
 
         self.step_count = 0
 
-        self.observation_space = spaces.Dict({
-            "position": spaces.Box(low=0, high=640, shape=(1,), dtype=np.int32)
-        })
+        self.observation_space = spaces.Discrete(641)
 
         self.action_space = spaces.Discrete(641)
 
