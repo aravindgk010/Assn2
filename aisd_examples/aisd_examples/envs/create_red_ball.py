@@ -99,6 +99,7 @@ class RedBallEnv(gym.Env):
 
         return observation
 
+    """ 
     def step(self, action):
         twist = Twist()
 
@@ -118,6 +119,34 @@ class RedBallEnv(gym.Env):
 
 
         return observation, reward, terminate, False, info
+    """ 
+
+    def step(self, action):
+        rclpy.spin_once(self.redball, timeout_sec=0.1)
+
+        twist = Twist()
+
+        if self.redball.redball_position is None:
+            twist.angular.z = self.rotation_direction * 0.5
+
+            # change direction periodically to simulate pendulum
+            if self.step_count % 20 == 0:
+                self.rotation_direction *= -1
+        else:
+            self.rotation_direction = 1  # reset when ball is found
+            twist.angular.z = (action - 320) / 320 * (np.pi / 2)
+
+        print(f"Twist Command: {twist.angular.z}")
+        self.redball.twist_publisher.publish(twist)
+
+        self.step_count += 1
+        observation = self._get_obs()
+        info = self._get_info()
+
+        reward = -abs(observation["position"] - 320) / 320
+        terminated = self.step_count == 100
+
+        return observation, reward, terminated, False, info
 
     def render(self):
         return
