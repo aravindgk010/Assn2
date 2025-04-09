@@ -133,7 +133,15 @@ class RedBallEnv(gym.Env):
         info = self._get_info()
 
         # Reward based on how close the ball is to the center (position == 1 or 2 is ideal)
-        reward = 1.0 if observation["position"] in [1, 2] else -1.0
+       
+        #reward = 1.0 if observation["position"] in [1, 2] else -1.0
+        if observation["position"] == 1 or observation["position"] == 2:
+            reward = 1.0  # favorable
+        elif observation["position"] == 0 or observation["position"] == 3:
+            reward = -0.5  # less favorable
+        else:
+            reward = -1.0  # no detection (if handled this way)
+
         terminated = self.step_count >= 100
 
         return observation, reward, terminated, False, info
