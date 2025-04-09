@@ -16,6 +16,6 @@ for step in range(1000):
 
     if terminated or truncated:
         print("Episode finished, resetting environment...")
-        observation, info = env.reset()
+        observation = env.reset()
 
 env.close()
