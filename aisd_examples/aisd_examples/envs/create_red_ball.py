@@ -70,7 +70,7 @@ class RedBallEnv(gym.Env):
         self.step_count = 0
 
         """ edited """
-        self.rotation_direction = 1  # 1 for left, -1 for right
+        #self.rotation_direction = 1  # 1 for left, -1 for right
 
 
         self.observation_space = spaces.Discrete(641)
@@ -94,7 +94,7 @@ class RedBallEnv(gym.Env):
     def step(self, action):
         twist = Twist()
 
-        """ 
+        
         if self.redball.redball_position is None:
             twist.angular.z = 0.5
         else:
@@ -112,7 +112,7 @@ class RedBallEnv(gym.Env):
             twist.angular.z = (action - 320) / 320 * (np.pi / 2)
 
         self.redball.twist_publisher.publish(twist)
-        """ """
+        """ 
 
         rclpy.spin_once(self.redball)
         self.step_count += 1
