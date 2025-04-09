@@ -15,11 +15,11 @@ q_table = np.random.rand(num_states, num_actions)
 
 """ final  hyperparameter values"""
 # hyperparameters - 1
-episodes = 50
+episodes = 100
 alpha = 0.5       # High learning rate (keeps fast updates)
 gamma = 0.95      # Slightly increases long-term reward consideration
 epsilon = 0.08    # Controlled exploration
-decay = 0.995     # Slightly lower decay to balance exploration-exploitation
+decay = 0.995     # Slightly lower decay to balance exploration-exploitation #0.12
 
 # Metrics for plotting
 episode_rewards = []
@@ -88,6 +88,6 @@ plt.title("Episode Rewards - Qlearning")
 plt.xlabel("Episode")
 plt.ylabel("Total Reward")
 plt.legend()
-
 plt.tight_layout()
+plt.savefig("media/q_learning_rewards.png")
 plt.show()
