@@ -71,8 +71,6 @@ class RedBall(Node):
             self.get_logger().info('no ball detected')
 
 
-
-
 class RedBallEnv(gym.Env):
     metadata = {"render_modes": "rgb_array", "render_fps":4}
 
@@ -102,7 +100,6 @@ class RedBallEnv(gym.Env):
 
         return observation
 
-    """ 
     def step(self, action):
         twist = Twist()
 
@@ -122,8 +119,8 @@ class RedBallEnv(gym.Env):
 
 
         return observation, reward, terminate, False, info
-    """ 
-
+    
+    """
     def step(self, action):
         rclpy.spin_once(self.redball, timeout_sec=0.1)
 
@@ -139,7 +136,7 @@ class RedBallEnv(gym.Env):
             self.rotation_direction = 1  # reset when ball is found
             twist.angular.z = (action - 320) / 320 * (np.pi / 2)
 
-        print(f"Twist Command: {twist.angular.z}")
+        #print(f"Twist Command: {twist.angular.z}")
         self.redball.twist_publisher.publish(twist)
 
         self.step_count += 1
@@ -150,6 +147,7 @@ class RedBallEnv(gym.Env):
         terminated = self.step_count == 100
 
         return observation, reward, terminated, False, info
+    """ 
 
     def render(self):
         return
