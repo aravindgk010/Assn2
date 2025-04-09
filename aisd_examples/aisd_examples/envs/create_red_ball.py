@@ -63,11 +63,11 @@ class RedBall(Node):
         if detected_circles is not None:
             for circle in detected_circles[0, :]:
                 the_circle = (int(circle[0]), int(circle[1]))
-                self.redball_position = the_circle[0]  # ✅ horizontal position for Q-learning
+                self.redball_position = the_circle[0]  # horizontal position for Q-learning
                 circled_orig = cv2.circle(frame, (int(circle[0]), int(circle[1])), int(circle[2]), (0,255,0), thickness=3)
             self.target_publisher.publish(self.br.cv2_to_imgmsg(circled_orig))
         else:
-            self.redball_position = None  # ✅ Important to reset when nothing is found
+            self.redball_position = None  # Important to reset when nothing is found
             self.get_logger().info('no ball detected')
 
 
@@ -80,14 +80,27 @@ class RedBallEnv(gym.Env):
 
         self.step_count = 0
 
-        self.observation_space = spaces.Discrete(641) #previously 641
+        self.observation_space = spaces.Discrete(4) #previously 641
 
-        self.action_space = spaces.Discrete(641) #previously 641
+        self.action_space = spaces.Discrete(3) #previously 641
 
         self.rotation_direction = 1
 
+    """ edited """
     def _get_obs(self):
-        return {"position": self.redball.redball_position if self.redball.redball_position is not None else 0}
+        pos = self.redball.redball_position
+        if pos is None:
+            return {"position": 0}  # Treat as 'left-most'
+        
+        # Assuming image width is 640 pixels
+        if pos < 160:
+            return {"position": 0}  # Left
+        elif pos < 320:
+            return {"position": 1}  # Center-left
+        elif pos < 480:
+            return {"position": 2}  # Center-right
+        else:
+            return {"position": 3}  # Right
     
     def _get_info(self):
         return {"position": self.redball.redball_position}
@@ -100,54 +113,31 @@ class RedBallEnv(gym.Env):
 
         return observation
 
+    """ edited """
     def step(self, action):
         twist = Twist()
 
-        if self.redball.redball_position is None:
-            twist.angular.z = 0.5
-        else:
-            twist.angular.z = (action -320) / 320 *(np.pi /2) #move towards the ball
-       
-        rclpy.spin_once(self.redball)
-        self.step_count += 1
+        if action == 0:
+            twist.angular.z = 0.5  # rotate left
+        elif action == 1:
+            twist.angular.z = 0.0  # stop
+        elif action == 2:
+            twist.angular.z = -0.5  # rotate right
 
-        observation = self._get_obs()
-        info = self._get_info()
-
-        reward = -abs(observation["position"] - 320) / 320
-        terminate = self.step_count == 100
-
-
-        return observation, reward, terminate, False, info
-    
-    """
-    def step(self, action):
-        rclpy.spin_once(self.redball, timeout_sec=0.1)
-
-        twist = Twist()
-
-        if self.redball.redball_position is None:
-            twist.angular.z = self.rotation_direction * 0.5
-
-            # change direction periodically to simulate pendulum
-            if self.step_count % 20 == 0:
-                self.rotation_direction *= -1
-        else:
-            self.rotation_direction = 1  # reset when ball is found
-            twist.angular.z = (action - 320) / 320 * (np.pi / 2)
-
-        #print(f"Twist Command: {twist.angular.z}")
         self.redball.twist_publisher.publish(twist)
 
+        rclpy.spin_once(self.redball)
+
         self.step_count += 1
         observation = self._get_obs()
         info = self._get_info()
 
-        reward = -abs(observation["position"] - 320) / 320
-        terminated = self.step_count == 100
+        # Reward based on how close the ball is to the center (position == 1 or 2 is ideal)
+        reward = 1.0 if observation["position"] in [1, 2] else -1.0
+        terminated = self.step_count >= 100
 
         return observation, reward, terminated, False, info
-    """ 
+
 
     def render(self):
         return
