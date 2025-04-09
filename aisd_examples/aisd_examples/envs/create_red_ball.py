@@ -41,7 +41,8 @@ class RedBall(Node):
         bright_red_mask = cv2.inRange(hsv_conv_img, bright_red_lower_bounds, bright_red_upper_bounds)
 
         blurred_mask = cv2.GaussianBlur(bright_red_mask,(9,9),3,3)
-    # some morphological operations (closing) to remove small blobs
+    
+        # some morphological operations (closing) to remove small blobs
         erode_element = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
         dilate_element = cv2.getStructuringElement(cv2.MORPH_RECT, (8, 8))
         eroded_mask = cv2.erode(blurred_mask,erode_element)
@@ -50,12 +51,23 @@ class RedBall(Node):
         # on the color-masked, blurred and morphed image I apply the cv2.HoughCircles-method to detect circle-shaped objects
         detected_circles = cv2.HoughCircles(dilated_mask, cv2.HOUGH_GRADIENT, 1, 150, param1=100, param2=20, minRadius=2, maxRadius=2000)
         the_circle = None
+        """ 
         if detected_circles is not None:
             for circle in detected_circles[0, :]:
                 circled_orig = cv2.circle(frame, (int(circle[0]), int(circle[1])), int(circle[2]), (0,255,0),thickness=3)
                 the_circle = (int(circle[0]), int(circle[1]))
             self.target_publisher.publish(self.br.cv2_to_imgmsg(circled_orig))
         else:
+            self.get_logger().info('no ball detected')
+        """ 
+        if detected_circles is not None:
+            for circle in detected_circles[0, :]:
+                the_circle = (int(circle[0]), int(circle[1]))
+                self.redball_position = the_circle[0]  # ✅ horizontal position for Q-learning
+                circled_orig = cv2.circle(frame, (int(circle[0]), int(circle[1])), int(circle[2]), (0,255,0), thickness=3)
+            self.target_publisher.publish(self.br.cv2_to_imgmsg(circled_orig))
+        else:
+            self.redball_position = None  # ✅ Important to reset when nothing is found
             self.get_logger().info('no ball detected')
 
 
