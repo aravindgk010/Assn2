@@ -6,7 +6,7 @@ import os
 import matplotlib.pyplot as plt
 
 # Create environment
-env = gym.make("aisd_examples/CreateRedBall-v0", render_mode="human")
+env = gym.make("aisd_examples/RedBall-V0", render_mode="human")
 
 episodes = 50
 episode_rewards = []
