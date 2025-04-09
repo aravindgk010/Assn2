@@ -17,9 +17,9 @@ q_table = np.random.rand(num_states, num_actions)
 # hyperparameters - 1
 episodes = 50
 alpha = 0.5       # High learning rate (keeps fast updates)
-gamma = 0.9      # Slightly increases long-term reward consideration
+gamma = 0.95      # Slightly increases long-term reward consideration
 epsilon = 0.08    # Controlled exploration
-decay = 0.12      # Slightly lower decay to balance exploration-exploitation
+decay = 0.995     # Slightly lower decay to balance exploration-exploitation
 
 # Metrics for plotting
 episode_rewards = []
