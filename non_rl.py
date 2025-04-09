@@ -61,7 +61,7 @@ plt.ylabel("Total Reward")
 plt.legend()
 plt.grid()
 plt.tight_layout()
-plt.savefig("media/non_rl_rewards.png")
+plt.savefig("non_rl_rewards.png")
 plt.show()
 
 
