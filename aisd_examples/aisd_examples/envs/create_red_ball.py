@@ -82,9 +82,9 @@ class RedBallEnv(gym.Env):
 
         self.step_count = 0
 
-        self.observation_space = spaces.Discrete(11) #previously 641
+        self.observation_space = spaces.Discrete(641) #previously 641
 
-        self.action_space = spaces.Discrete(5) #previously 641
+        self.action_space = spaces.Discrete(641) #previously 641
 
         self.rotation_direction = 1
 
