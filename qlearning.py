@@ -83,19 +83,10 @@ env.close()
 plt.figure(figsize=(12, 5))
 
 # Plot for rewards
-plt.subplot(1, 2, 1)
 plt.plot(episode_rewards, label="Total Rewards")
-plt.title("Episode Rewards")
+plt.title("Episode Rewards - Qlearning")
 plt.xlabel("Episode")
 plt.ylabel("Total Reward")
-plt.legend()
-
-# Plot for steps per episode
-plt.subplot(1, 2, 2)
-plt.plot(steps_per_episode, label="Steps per Episode", color="red")
-plt.title("Steps per Episode")
-plt.xlabel("Episode")
-plt.ylabel("Steps")
 plt.legend()
 
 plt.tight_layout()
