@@ -18,7 +18,7 @@ del model
 model = PPO.load("ppo_blocks")
 
 # Test the trained agent
-obs= env.reset()
+obs, info = env.reset()
 
 episode_rewards = []
 # Run for 10 episodes
@@ -35,7 +35,7 @@ for episode in range(10):
         if terminated or truncated:
             print(f"Episode {episode + 1} - Total Reward: {total_reward}")
             episode_rewards.append(total_reward)
-            obs= env.reset()
+            obs, info = env.reset()
             done = True
 
 # Close the environment
@@ -44,9 +44,9 @@ env.close()
 # Plot the results
 plt.figure(figsize=(8, 5))
 plt.plot(episode_rewards, marker='o', linestyle='-')
-plt.title('DQN - Episode Rewards')
+plt.title('PPO - Episode Rewards')
 plt.xlabel('Episode')
 plt.ylabel('Total Reward')
 plt.tight_layout()
-plt.savefig("dqn_rewards.png")
+plt.savefig("ppo_rewards.png")
 plt.show()

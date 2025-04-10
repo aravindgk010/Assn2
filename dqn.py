@@ -14,7 +14,7 @@ del model   #remove to demonstrate saving and loading
 
 model = DQN.load("dqn_blocks")
 
-obs= env.reset()
+obs, info = env.reset()
 
 episode_rewards = []
 # Run for 10 episodes
@@ -30,7 +30,7 @@ for episode in range(10):
         if terminated or truncated:
             print(f"Episode {episode + 1} - Total Reward: {total_reward}")
             episode_rewards.append(total_reward)
-            obs = env.reset()
+            obs, info = env.reset()
             done = True
 
 env.close()
