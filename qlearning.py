@@ -15,7 +15,7 @@ q_table = np.random.rand(num_states, num_actions)
 
 """ final  hyperparameter values"""
 # hyperparameters - 1
-episodes = 50
+episodes = 100
 alpha = 0.5       # High learning rate (keeps fast updates)
 gamma = 0.95      # Slightly increases long-term reward consideration
 epsilon = 0.08    # Controlled exploration

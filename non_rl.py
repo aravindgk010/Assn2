@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 # Create environment
 env = gym.make("aisd_examples/RedBall-V0", render_mode="human")
 
-episodes = 50
+episodes = 100
 episode_rewards = []
 steps_per_episode = []
 
