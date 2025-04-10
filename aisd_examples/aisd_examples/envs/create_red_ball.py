@@ -115,8 +115,10 @@ class RedBallEnv(gym.Env):
 
         self.step_count = 0
         observation = self._get_obs()
+        """ ppo & dqn"""
+        info = self._get_info()
 
-        return observation
+        return observation, info
 
     """ edited """
     def step(self, action):
