@@ -18,7 +18,7 @@ eval_callback = EvalCallback(
         render=False
     )
 
-model = PPO("MlpPolicy", env, verbose=1)
+model = PPO("MultiInputPolicy", env, verbose=1)
 model.learn(total_timesteps=10000, callback=eval_callback)
 model.save("ppo_redball")
 
