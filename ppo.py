@@ -18,7 +18,7 @@ del model
 model = PPO.load("ppo_blocks")
 
 # Test the trained agent
-obs, info = env.reset()
+obs= env.reset()
 
 episode_rewards = []
 # Run for 10 episodes
@@ -35,7 +35,7 @@ for episode in range(10):
         if terminated or truncated:
             print(f"Episode {episode + 1} - Total Reward: {total_reward}")
             episode_rewards.append(total_reward)
-            obs, info = env.reset()
+            obs= env.reset()
             done = True
 
 # Close the environment
